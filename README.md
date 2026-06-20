@@ -1,4 +1,17 @@
+<div align="center">
+
 # E-Commerce Recommendation Engine
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
+[![sentence-transformers](https://img.shields.io/badge/sentence--transformers-2.7+-FFB300)](https://www.sbert.net)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-4169E1?logo=postgresql&logoColor=white)](https://postgresql.org)
+[![Status](https://img.shields.io/badge/Status-Production-success)](#)
+[![Recall@10](https://img.shields.io/badge/Recall%4010-0.41%20vs%200.18%20baseline-059669)](#eval)
+
+</div>
+
+---
 
 > Hybrid recommender for an e-commerce client. Embedding-driven content similarity for cold-start products, behavioural signals for warm users. Drove measurable lift in average order value and subscription conversion.
 
