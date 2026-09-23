@@ -1,43 +1,56 @@
-[build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "recommender"
 version = "0.1.0"
 description = "Reference implementation of a hybrid recommender (popularity + content + collaborative ALS) on MovieLens-100K."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = { text = "MIT" }
-authors = [{ name = "Darrshan Govender" }]
+authors = [{ name = "Darrshan Govender", email = "darrshangovender@gmail.com" }]
+keywords = ["recommender-systems", "collaborative-filtering", "als", "movielens", "machine-learning"]
 dependencies = [
     "numpy>=1.24",
     "pandas>=2.0",
     "scipy>=1.10",
     "scikit-learn>=1.3",
-    "implicit>=0.7.2",
     "requests>=2.31",
     "tqdm>=4.65",
 ]
 
 [project.optional-dependencies]
+# `implicit` ships compiled extensions and has no wheel for every
+# Python/OS combination, so installing it can fail outright. The ALS model
+# falls back to a pure-NumPy solver when it is absent (see
+# recommender.models._als_numpy), which keeps the package installable and the
+# suite runnable everywhere. Install this extra for the fast native solver.
+als = ["implicit>=0.7.2"]
+# Plotting and Jupyter are only needed to run notebooks/, not the test suite.
+notebooks = ["jupyter>=1.0", "matplotlib>=3.7", "seaborn>=0.12"]
 dev = [
-    "pytest>=7.4",
+    "pytest>=8.0",
     "pytest-cov>=4.1",
-    "jupyter>=1.0",
-    "matplotlib>=3.7",
-    "seaborn>=0.12",
+    "ruff>=0.6",
 ]
 
-[tool.setuptools.packages.find]
-include = ["recommender*"]
-exclude = ["tests*", "notebooks*", "benchmarks*", "docs*"]
+[project.urls]
+Homepage = "https://github.com/darrshangovender/recommendation-engine"
+Issues = "https://github.com/darrshangovender/recommendation-engine/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["recommender"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-python_files = "test_*.py"
-addopts = "-ra --strict-markers"
+python_files = ["test_*.py"]
+addopts = "-ra -q"
+pythonpath = ["."]
+markers = [
+    "network: hits the internet; deselected by default, opt in with RECOMMENDER_NETWORK_TESTS=1",
+]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py311"
