@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import Sequence
 
-import numpy as np
 import pandas as pd
 
 from recommender.data.loader import MovieLensData, load_movielens_100k, time_split
