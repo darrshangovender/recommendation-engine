@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Iterable
+from collections.abc import Iterable
 
 import numpy as np
 import pandas as pd
@@ -19,7 +19,7 @@ class Recommender(ABC):
     name: str = "abstract"
 
     @abstractmethod
-    def fit(self, ratings: pd.DataFrame, items: pd.DataFrame | None = None) -> "Recommender":
+    def fit(self, ratings: pd.DataFrame, items: pd.DataFrame | None = None) -> Recommender:
         """Train on a ratings dataframe (columns: user_id, item_id, rating, timestamp)."""
 
     @abstractmethod
