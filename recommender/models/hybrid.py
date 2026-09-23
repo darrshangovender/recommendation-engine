@@ -12,7 +12,7 @@ hit ``warm_threshold`` events.
 
 from __future__ import annotations
 
-from typing import Iterable
+from collections.abc import Iterable
 
 import numpy as np
 import pandas as pd
@@ -56,14 +56,14 @@ class HybridRecommender(Recommender):
         self._all_item_ids: np.ndarray = np.empty(0, dtype=np.int64)
         self._fixed_alpha: float | None = None
 
-    def with_fixed_alpha(self, alpha: float) -> "HybridRecommender":
+    def with_fixed_alpha(self, alpha: float) -> HybridRecommender:
         """For testing — pin alpha regardless of user history depth."""
         if not 0.0 <= alpha <= 1.0:
             raise ValueError(f"alpha must be in [0, 1], got {alpha}")
         self._fixed_alpha = float(alpha)
         return self
 
-    def fit(self, ratings: pd.DataFrame, items: pd.DataFrame | None = None) -> "HybridRecommender":
+    def fit(self, ratings: pd.DataFrame, items: pd.DataFrame | None = None) -> HybridRecommender:
         self.content.fit(ratings, items=items)
         self.collab.fit(ratings, items=items)
         self._popularity.fit(ratings, items=items)
@@ -94,11 +94,11 @@ class HybridRecommender(Recommender):
         candidates: set[int] = set()
         try:
             candidates.update(self.content.recommend(user_id, k=pool_size, exclude_seen=exclude_seen))
-        except Exception:
+        except Exception:  # noqa: BLE001, S110  head is optional; popularity backfill covers it
             pass
         try:
             candidates.update(self.collab.recommend(user_id, k=pool_size, exclude_seen=exclude_seen))
-        except Exception:
+        except Exception:  # noqa: BLE001, S110  head is optional; popularity backfill covers it
             pass
         if not candidates:
             return self._popularity.recommend(user_id, k=k, exclude_seen=exclude_seen)
