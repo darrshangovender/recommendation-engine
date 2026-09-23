@@ -24,6 +24,24 @@ def test_recall_at_k_partial():
     assert _recall_at_k([1, 4, 5], truth={1, 2}, k=3) == 0.5
 
 
+def test_recall_denominator_is_full_truth_set_not_capped_at_k():
+    """The denominator must be |relevant|, not min(|relevant|, k).
+
+    The capped form inflates any user with more relevant items than slots: 5
+    hits against 20 held-out items at k=10 is 0.25 recall, but capping the
+    denominator at k reports 0.50. Every case where |truth| <= k agrees, which
+    is why the rest of this file never caught it.
+    """
+    truth = set(range(1, 21))          # 20 relevant items
+    recs = [1, 2, 3, 4, 5, 90, 91, 92, 93, 94]   # 5 hits in the top 10
+    assert _recall_at_k(recs, truth=truth, k=10) == 0.25
+
+
+def test_recall_agrees_with_capped_form_when_truth_fits_in_k():
+    """Sanity check that the fix is a no-op on the common case."""
+    assert _recall_at_k([1, 2, 9], truth={1, 2}, k=10) == 1.0
+
+
 def test_precision_at_k():
     assert _precision_at_k([1, 2, 9], truth={1, 2}, k=3) == 2 / 3
 
