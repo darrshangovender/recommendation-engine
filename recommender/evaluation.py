@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import math
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Iterable, Mapping
 
 import numpy as np
 import pandas as pd
@@ -37,10 +37,22 @@ class EvalResult:
 
 
 def _recall_at_k(recs: list[int], truth: set[int], k: int) -> float:
+    """Standard Recall@K: hits / |relevant|.
+
+    The denominator is the full relevant set, NOT ``min(|relevant|, k)``. The
+    capped variant answers "of the relevant items that could fit in k slots, how
+    many did we get" — a reasonable question, but it is not recall, and it
+    inflates the score for any user with more than k relevant items. A user with
+    20 held-out items and 5 hits at k=10 scores 0.25 here; the capped form
+    reported 0.50.
+
+    NDCG below still uses ``min(|relevant|, k)`` for the *ideal* DCG, which is
+    correct — a perfect ranking genuinely cannot place more than k items.
+    """
     if not truth:
         return 0.0
     hits = sum(1 for r in recs[:k] if r in truth)
-    return hits / min(len(truth), k)
+    return hits / len(truth)
 
 
 def _precision_at_k(recs: list[int], truth: set[int], k: int) -> float:
@@ -86,7 +98,7 @@ def evaluate(
         eval_users = sorted(rng.choice(eval_users, size=user_sample, replace=False).tolist())
 
     truth_by_user: dict[int, set[int]] = (
-        test.groupby("user_id")["item_id"].apply(lambda s: set(int(i) for i in s)).to_dict()
+        test.groupby("user_id")["item_id"].apply(lambda s: {int(i) for i in s}).to_dict()
     )
 
     # Item popularity from TRAIN — never peek at test.
