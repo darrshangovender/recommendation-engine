@@ -1,20 +1,16 @@
-.PHONY: install data test eval bench clean
+.PHONY: install test lint bench clean
 
 install:
 	pip install -e ".[dev]"
 
-data:
-	python -c "from recommender.data.loader import load_movielens_100k; load_movielens_100k()"
-
 test:
-	pytest -v
+	pytest tests/ -q
 
-eval:
-	python -m recommender.pipeline
+lint:
+	ruff check .
 
 bench:
-	python benchmarks/run.py
+	@echo "No benchmark in this repo."
 
 clean:
-	rm -rf build dist *.egg-info .pytest_cache .coverage htmlcov
-	find . -type d -name __pycache__ -exec rm -rf {} +
+	rm -rf .pytest_cache **/__pycache__ *.egg-info .ruff_cache
