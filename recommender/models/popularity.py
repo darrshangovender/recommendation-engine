@@ -7,7 +7,7 @@ to beat on novelty-insensitive metrics like raw recall.
 
 from __future__ import annotations
 
-from typing import Iterable
+from collections.abc import Iterable
 
 import numpy as np
 import pandas as pd
@@ -23,7 +23,7 @@ class PopularityRecommender(Recommender):
         self._popularity: dict[int, float] = {}
         self._user_seen: dict[int, set[int]] = {}
 
-    def fit(self, ratings: pd.DataFrame, items: pd.DataFrame | None = None) -> "PopularityRecommender":
+    def fit(self, ratings: pd.DataFrame, items: pd.DataFrame | None = None) -> PopularityRecommender:
         counts = ratings.groupby("item_id").size().sort_values(ascending=False)
         self._ranked_items = counts.index.to_numpy(dtype=np.int64)
         # Normalised popularity in [0, 1] for use as a score.
