@@ -6,7 +6,7 @@ falling back to all rated items if the user has no high ratings.
 
 from __future__ import annotations
 
-from typing import Iterable
+from collections.abc import Iterable
 
 import numpy as np
 import pandas as pd
@@ -42,7 +42,7 @@ class ContentRecommender(Recommender):
         self._user_profiles: dict[int, csr_matrix] = {}
         self._user_seen: dict[int, set[int]] = {}
 
-    def fit(self, ratings: pd.DataFrame, items: pd.DataFrame | None = None) -> "ContentRecommender":
+    def fit(self, ratings: pd.DataFrame, items: pd.DataFrame | None = None) -> ContentRecommender:
         if items is None:
             raise ValueError("ContentRecommender requires the items dataframe")
 
