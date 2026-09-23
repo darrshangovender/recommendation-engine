@@ -8,5 +8,5 @@ Public API:
 from recommender.models.base import Recommender
 from recommender.pipeline import Pipeline
 
-__all__ = ["Recommender", "Pipeline"]
+__all__ = ["Pipeline", "Recommender"]
 __version__ = "0.1.0"
