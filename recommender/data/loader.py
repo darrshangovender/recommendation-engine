@@ -13,7 +13,6 @@ import os
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Tuple
 
 import numpy as np
 import pandas as pd
@@ -106,7 +105,7 @@ def load_movielens_100k(cache_dir: Path | None = None) -> MovieLensData:
 
 def time_split(
     ratings: pd.DataFrame, test_frac: float = 0.2
-) -> Tuple[pd.DataFrame, pd.DataFrame]:
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Chronological train/test split.
 
     The cutoff is the timestamp quantile at ``1 - test_frac``; events at or
