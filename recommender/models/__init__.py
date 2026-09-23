@@ -7,9 +7,9 @@ from recommender.models.hybrid import HybridRecommender
 from recommender.models.popularity import PopularityRecommender
 
 __all__ = [
-    "Recommender",
-    "PopularityRecommender",
-    "ContentRecommender",
     "CollabALSRecommender",
+    "ContentRecommender",
     "HybridRecommender",
+    "PopularityRecommender",
+    "Recommender",
 ]
